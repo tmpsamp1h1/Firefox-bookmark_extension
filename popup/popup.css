@@ -1,0 +1,60 @@
+header.bookmark_header {
+     /*background: no-repeat left/cover url(/media/examples/puppy-header-logo.jpg);*/
+     font-size: 10px;
+     height: 40px;
+     min-width: 100px;
+     align-items: center;
+     color: blueviolet;
+     text-shadow: #000 0 0 .1em;
+ }
+
+.main_field label
+{
+     font-family: Montserrat-Regular;
+     font-size: 20px;
+     display: block;
+     margin-bottom: 0.25rem;
+
+}
+
+/* стили для input */
+.name_field_input {
+     display: block;
+     height: calc(2.25rem + 2px);
+     padding: 0.375rem 0.75rem;
+     font-family: inherit;
+     font-size: 1rem;
+     font-weight: 400;
+     line-height: 1.5;
+     color: #212529;
+     background-color: ghostwhite;
+     background-clip: padding-box;
+     border: 1px solid #bdbdbd;
+     border-radius: 0.25rem;
+     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.description_field_input
+{
+     padding: 10px;
+     line-height: 1.5;
+     border-radius: 5px;
+     border: 1px solid #ccc;
+     background-color: ghostwhite;
+     box-shadow: 1px 1px 1px #999;
+}
+
+.button {
+     margin: 1% auto;
+     padding: 10px;
+     text-align: center;
+     text-decoration: none;
+     cursor: pointer;
+     border-radius: 6px;
+     background-color: #ccccff;
+}
+
+.cancel
+{
+     background-color: #ffcccc;
+}

@@ -1,0 +1,20 @@
+{
+
+     "manifest_version": 2,
+     "name": "bookmarks extension",
+     "version": "1.0",
+   
+     "description": "storage store bookmarks",
+
+     "permissions": [
+       "tabs",
+       "storage"
+     ],
+   
+     "browser_action": {
+      "browser_style": true,
+      "default_title": "Bookmark extension",
+      "default_popup": "popup/popup.html"
+    }
+}
+   
