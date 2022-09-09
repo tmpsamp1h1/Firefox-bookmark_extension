@@ -1,10 +1,12 @@
 const storage = browser.storage.local;
 const tabs = browser.tabs;
+
 const path_to_storage_page = '../storage/storage.html';
 
 function reload_values( switchToEdit = false )
 {
-     let caption = document.getElementById('container');
+     // @todo: change id ! !!
+     let caption = document.getElementById('status_id');
      let buttons = document.getElementById('popup_buttons');
      let cancel = document.getElementById('cancel');
      let add = document.getElementById('add');
@@ -116,9 +118,11 @@ tabs.query(
 
                let buttonSubmit = document.getElementById('add');
                let buttonReset = document.getElementById('cancel');
-               let container = document.getElementById('container');
-               let currentPosition = document.createElement('p');
-
+               let status = document.getElementById('status');
+               let currentPosition = document.createElement('h3');
+               /// @todo: change status_id
+               currentPosition.setAttribute('id', 'status_id');
+                    
                if (indexBookmark == -1)
                {
                     buttonSubmit.firstChild.data = 'Add';
@@ -140,8 +144,7 @@ tabs.query(
                     });
                }
                // @todo: u should check that is this row can be locate after declare
-               container.appendChild(currentPosition);
+               status.appendChild(currentPosition);
           })
      }
 );
-
