@@ -8,7 +8,6 @@ const Table_view_select_id = 'sort';
 const Table_id = 'container';
 
 /// @todo: change a new window storage to tab
-
 // generate a link to export storage
 function generate_download_link(bookmarks)
 {
@@ -28,7 +27,7 @@ function generate_download_link(bookmarks)
 function generate_select(bookmarks)
 {
      var label = document.createElement('label');
-     label.setAttribute('for', 'sort');
+     label.setAttribute('for', Table_view_id);
      label.innerHTML = 'Table sorted by: ';
      var previous;
 
@@ -50,16 +49,14 @@ function generate_select(bookmarks)
 
 function page_setup_with_bookmarks(bookmarks)
 {
-
-     // @todo: fix this guy !
-     document.getElementById(Table_view_select_id).addEventListener('change', function()
+     document.getElementById(Table_view_id).addEventListener('change', function()
      {
           if (!bookmarks)
           {
                console.warn('storage is empty');
                return;
           }
-          let sort_type = (document.getElementById(Table_view_select_id).sort_type).toLowerCase();
+          let sort_type = document.getElementById(Table_view_select_id).value;
           switch (sort_type)
           {
                case 'url':
@@ -96,12 +93,14 @@ function page_setup_with_bookmarks(bookmarks)
 
 function generate_table(bookmarks)
 {
+     let container = document.getElementById(Table_id);
      let table = document.createElement('table');
-
      let caption = document.createElement('caption');
      caption.innerHTML = 'Bookmark storage';
 
-     // @todo: change font
+     container.appendChild(table);
+     table.appendChild(caption);
+
      let thead = table.createTHead();
      let row = thead.insertRow();
      for (let str of Object.keys(bookmarks[0]))
@@ -233,23 +232,13 @@ function generate_table(bookmarks)
           cell.appendChild(buttonEdit);
           cell.appendChild(button);
      }
-
-     let container = document.getElementById(Table_id);
-     container.appendChild(caption);
-     container.appendChild(table);
 }
 
-function generate_header(header_description)
+function page_setup_without_bookmarks()
 {
-     /// @todo: change to caption! <
-     let header = document.createElement('h1'); //, header);
-     // they r eq
-     //let text = document.createTextNode(header_description);
-     //header.appendChild(text);
-     //document.body.appendChild( header );
-     header.innerHTML = header_description;
+     let header = document.createElement('h1');
+     header.innerHTML = 'Storage is empty';
      document.body.append(header);
-
 }
 
 storage.get()
@@ -257,7 +246,7 @@ storage.get()
      {
           if (!data.bookmarks || data.bookmarks.length === 0)
           {
-               generate_header('Storage is empty');
+               page_setup_without_bookmarks();
                return;
           }
           generate_select(data.bookmarks);
