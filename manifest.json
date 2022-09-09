@@ -12,7 +12,7 @@
      ],
    
      "browser_action": {
-      "browser_style": true,
+//      "browser_style": true,
       "default_title": "Bookmark extension",
       "default_popup": "popup/popup.html"
     }

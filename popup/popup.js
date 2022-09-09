@@ -2,6 +2,18 @@ const storage = browser.storage.local;
 const tabs = browser.tabs;
 const path_to_storage_page = '../storage/storage.html';
 
+function reload_value()
+{
+     let caption = document.getElementById('container');
+     let buttons = document.getElementById('popup_buttons');
+     let cancel = document.getElementById('cancel');
+     let add = document.getElementById('add');
+     
+     caption.innerHTML = caption.innerHTML == 'Add bookmark'  ? 'Edit bookmark' : 'Add bookmark';
+     cancel.innerHTML = cancel.innerHTML == 'Cancel' ? 'Remove' : 'Cancel';
+     add.innerHTML = add.innerHTML == 'Add' ? 'Edit' : 'Add';
+}
+
 function setup_click_action( currentUrl )
 {
      document.getElementById('description').focus();
@@ -60,7 +72,7 @@ function setup_click_action( currentUrl )
                     bookmarks: data.bookmarks
                });
 
-               window.location.reload();
+               reload_value();
           });
      });
 }
@@ -90,14 +102,18 @@ tabs.query(
 
                let buttonSubmit = document.getElementById('add');
                let buttonReset = document.getElementById('cancel');
+               let container = document.getElementById('container');
+               let currentPosition = document.createElement('p');
 
                if (indexBookmark == -1)
                {
                     buttonSubmit.firstChild.data = 'Add';
                     buttonReset.firstChild.data = 'Cancel'
+                    currentPosition.innerHTML = 'Add bookmark';
                }
                else
                {
+                    currentPosition.innerHTML = 'Edit bookmark';
                     buttonSubmit.firstChild.data = 'Edit';
                     buttonReset.firstChild.data = 'Remove';
                     buttonReset.addEventListener('click', () =>
@@ -109,6 +125,8 @@ tabs.query(
                          });
                     });
                }
+               // @todo: u should check that is this row can be locate after declare
+               container.appendChild(currentPosition);
           })
      }
 );

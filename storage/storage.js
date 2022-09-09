@@ -48,6 +48,8 @@ function generate_select(bookmarks)
 
 function page_setup_with_bookmarks(bookmarks)
 {
+
+     // @todo: fix this guy !
      document.getElementById(Table_view_select_id).addEventListener('change', function()
      {
           if (!bookmarks)
@@ -191,7 +193,6 @@ function generate_table(bookmarks)
                                         {
                                              bookmarks: bookmarks
                                         });
-                                   window.location.reload();
                               }
                          });
                }

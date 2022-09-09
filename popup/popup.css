@@ -1,24 +1,22 @@
-header.bookmark_header {
-     /*background: no-repeat left/cover url(/media/examples/puppy-header-logo.jpg);*/
-     font-size: 10px;
-     height: 40px;
-     min-width: 100px;
-     align-items: center;
-     color: blueviolet;
-     text-shadow: #000 0 0 .1em;
- }
-
-.main_field label
-{
-     font-family: Montserrat-Regular;
+header {
      font-size: 20px;
+     font-family: Palatino;
+     color:darkblue;
+}
+
+body {
+     background-color: #c7eaec;
+}
+
+label {
+     font-family: Palatino;
+     font-size: 15px;
      display: block;
      margin-bottom: 0.25rem;
-
 }
 
 /* стили для input */
-.name_field_input {
+#title {
      display: block;
      height: calc(2.25rem + 2px);
      padding: 0.375rem 0.75rem;
@@ -34,8 +32,7 @@ header.bookmark_header {
      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-.description_field_input
-{
+#description {
      padding: 10px;
      line-height: 1.5;
      border-radius: 5px;
