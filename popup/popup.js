@@ -3,23 +3,25 @@ const tabs = browser.tabs;
 
 const path_to_storage_page = '../storage/storage.html';
 
+// @todo: enter -> add or edit !
+// @todo: window that user edit or saved !
+
 function reload_values( switchToEdit = false )
 {
-     // @todo: change id ! !!
-     let caption = document.getElementById('status_id');
+     let status = document.getElementById('status');
      let buttons = document.getElementById('popup_buttons');
      let cancel = document.getElementById('cancel');
      let add = document.getElementById('add');
      
      if ( switchToEdit )
      {
-          caption.innerHTML = 'Edit bookmark';
+          status.innerHTML = 'Edit bookmark';
           cancel.innerHTML = 'Remove';
           add.innerHTML = 'Edit';
           return;
      }
      
-     caption.innerHTML = 'Add bookmark';
+     status.innerHTML = 'Add bookmark';
      cancel.innerHTML = 'Cancel';
      add.innerHTML = 'Add';
 }
@@ -102,6 +104,9 @@ tabs.query(
      .then((tabs) =>
      {
 
+          let status = document.getElementById('status');
+          status.innerHTML = 'Add bookmark';
+               
           setup_click_action( tabs[0].url );
 
           document.getElementById('title').defaultValue = tabs[0].title;
@@ -118,20 +123,14 @@ tabs.query(
 
                let buttonSubmit = document.getElementById('add');
                let buttonReset = document.getElementById('cancel');
-               let status = document.getElementById('status');
-               let currentPosition = document.createElement('h3');
-               /// @todo: change status_id
-               currentPosition.setAttribute('id', 'status_id');
-                    
                if (indexBookmark == -1)
                {
                     buttonSubmit.firstChild.data = 'Add';
                     buttonReset.firstChild.data = 'Cancel'
-                    currentPosition.innerHTML = 'Add bookmark';
                }
                else
                {
-                    currentPosition.innerHTML = 'Edit bookmark';
+                    status.innerHTML = 'Edit bookmark';
                     buttonSubmit.firstChild.data = 'Edit';
                     buttonReset.firstChild.data = 'Remove';
                     buttonReset.addEventListener('click', () =>
@@ -143,8 +142,6 @@ tabs.query(
                          });
                     });
                }
-               // @todo: u should check that is this row can be locate after declare
-               status.appendChild(currentPosition);
           })
      }
 );

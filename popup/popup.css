@@ -7,17 +7,19 @@ header {
 }
 
 body {
-     background-color: #c7eaec;
+     background-color: whitesmoke;
      width: 500px;
-     height: 300px;
+     height: 260px;
 }
 
 #status {
-     font-family:'Courier New', Courier, monospace;
-     color:crimson;
+     font-family: Palatino;
+     color:black;
+     text-align: center;
+     margin: 0px;
 }
 
-#popup_form label {
+.popup_form label {
      font-family: Palatino;
      font-size: 20px;
      margin: 7px;
@@ -50,23 +52,27 @@ body {
      border: 1px solid #bdbdbd;
      background-color: ghostwhite;
 }
+
 /*
-#description {
-     padding: 5px;
-     width:  400px;
-     line-height: 1.5;
-     border-radius: 5px;
-     border: 1px solid #ccc;
-     background-color: ghostwhite;
-     box-shadow: 1px 1px 1px #999;
+margin: 1% auto;
+padding: 10px;
+
+text-decoration: none;
+*/
+
+.popup_buttons {
+     margin: 7px;
+     justify-content: center;
+     display: flex;
 }
 
-#popup_buttons {
-     margin: 1% auto;
-     padding: 10px;
-     text-align: center;
-     text-decoration: none;
+button {
+     font-family: Palatino;
      cursor: pointer;
      border-radius: 6px;
-     background-color: #ccccff;
-}*/
+     width   : 100%;
+     height : 100%;
+     text-align: center;
+     padding: 1px;
+     font-size: 17px;
+}
