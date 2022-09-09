@@ -94,6 +94,9 @@ function generate_table(bookmarks)
 {
      let table = document.createElement('table');
 
+     let caption = document.createElement('caption');
+     caption.innerHTML = 'Bookmark storage';
+
      // @todo: change font
      let thead = table.createTHead();
      let row = thead.insertRow();
@@ -229,11 +232,13 @@ function generate_table(bookmarks)
      }
 
      let container = document.getElementById(Table_id);
+     container.appendChild(caption);
      container.appendChild(table);
 }
 
 function generate_header(header_description)
 {
+     /// @todo: change to caption! <
      let header = document.createElement('h1'); //, header);
      // they r eq
      //let text = document.createTextNode(header_description);
@@ -241,6 +246,7 @@ function generate_header(header_description)
      //document.body.appendChild( header );
      header.innerHTML = header_description;
      document.body.append(header);
+
 }
 
 storage.get()
@@ -251,8 +257,6 @@ storage.get()
                generate_header('Storage is empty');
                return;
           }
-
-          generate_header('Bookmark storage');
           generate_select(data.bookmarks);
           generate_download_link(data.bookmarks);
           generate_table(data.bookmarks);
