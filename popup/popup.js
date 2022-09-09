@@ -2,16 +2,24 @@ const storage = browser.storage.local;
 const tabs = browser.tabs;
 const path_to_storage_page = '../storage/storage.html';
 
-function reload_value()
+function reload_values( switchToEdit = false )
 {
      let caption = document.getElementById('container');
      let buttons = document.getElementById('popup_buttons');
      let cancel = document.getElementById('cancel');
      let add = document.getElementById('add');
      
-     caption.innerHTML = caption.innerHTML == 'Add bookmark'  ? 'Edit bookmark' : 'Add bookmark';
-     cancel.innerHTML = cancel.innerHTML == 'Cancel' ? 'Remove' : 'Cancel';
-     add.innerHTML = add.innerHTML == 'Add' ? 'Edit' : 'Add';
+     if ( switchToEdit )
+     {
+          caption.innerHTML = 'Edit bookmark';
+          cancel.innerHTML = 'Remove';
+          add.innerHTML = 'Edit';
+          return;
+     }
+     
+     caption.innerHTML = 'Add bookmark';
+     cancel.innerHTML = 'Cancel';
+     add.innerHTML = 'Add';
 }
 
 function setup_click_action( currentUrl )
@@ -26,7 +34,12 @@ function setup_click_action( currentUrl )
 
      document.getElementById('cancel').addEventListener('click', () =>
      {
-          window.close();
+          if ( cancel = document.getElementById('cancel').innerHTML == 'Cancel' )
+          {
+               window.close();
+          } else {
+               reload_values();
+          }
      });
 
      document.getElementById('add').addEventListener('click', () =>
@@ -66,13 +79,14 @@ function setup_click_action( currentUrl )
                else // it's a new bookmark
                {
                     data.bookmarks.push(bookmark_to_insert);
+                    let switchValuesToEdit = true;
+                    reload_values( switchValuesToEdit );
                }
                storage.set(
                {
                     bookmarks: data.bookmarks
                });
 
-               reload_value();
           });
      });
 }
