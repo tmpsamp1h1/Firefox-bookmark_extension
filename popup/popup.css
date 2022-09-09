@@ -1,7 +1,7 @@
 header {
      font-size: 20px;
      font-family: Palatino;
-     color:darkblue;
+     color:navy;
      text-align: center;
      margin-top: 5px;
 }
@@ -25,7 +25,11 @@ body {
      margin: 7px;
 }
 
-/* todo: change font-family*/
+
+/*
+todo: there're common styles title and description
+should delete duplication
+*/
 #title {
      font-family: Palatino;
      font-size: 18px;
@@ -37,9 +41,6 @@ body {
      padding: 1px;
      border: 1px solid #bdbdbd;
 }
-
-/*маргин - внешний от элемента
- padding - внутри от границы элемента*/
 
 #description {
      font-family: Palatino;
@@ -53,13 +54,6 @@ body {
      background-color: ghostwhite;
 }
 
-/*
-margin: 1% auto;
-padding: 10px;
-
-text-decoration: none;
-*/
-
 .popup_buttons {
      margin: 7px;
      justify-content: center;
@@ -69,10 +63,11 @@ text-decoration: none;
 button {
      font-family: Palatino;
      cursor: pointer;
-     border-radius: 6px;
+     border-radius: 5px;
      width   : 100%;
      height : 100%;
      text-align: center;
      padding: 1px;
      font-size: 17px;
+     background-color:lavender;
 }

@@ -7,6 +7,8 @@ const Table_view_id = 'table_view';
 const Table_view_select_id = 'sort';
 const Table_id = 'container';
 
+/// @todo: change a new window storage to tab
+
 // generate a link to export storage
 function generate_download_link(bookmarks)
 {
