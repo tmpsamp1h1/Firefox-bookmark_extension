@@ -1,11 +1,13 @@
 const storage = browser.storage.local;
 
 const Download_file_name = 'backup.json';
-const Download_id = 'downloader';
+const Div_download = 'downloader';
 
-const Table_view_id = 'table_view';
+const Div_table_view = 'table_view';
 const Table_view_select_id = 'sort';
-const Table_id = 'container';
+
+const Div_table = 'container';
+const Table_id = 'uniq';
 
 /// @todo: change a new window storage to tab
 // generate a link to export storage
@@ -20,36 +22,32 @@ function generate_download_link(bookmarks)
      a.href = url;
      a.download = Download_file_name;
      a.textContent = 'Download ' + Download_file_name;
-     document.getElementById(Download_id).appendChild(a);
+     document.getElementById(Div_download).appendChild(a);
 }
 
 // generate a table view
 function generate_select(bookmarks)
 {
      var label = document.createElement('label');
-     label.setAttribute('for', Table_view_id);
+     label.setAttribute('for', Div_table_view);
      label.innerHTML = 'Table sorted by: ';
      var previous;
 
-     // @todo: fix bug with focused option
      var select = document.createElement('select');
-
-     storage.set( { settings : [ { option : 'added' } ] } );
-
      select.setAttribute('id', Table_view_select_id);
      select.add(new Option('Added', 'added'));
      select.add(new Option('URL', 'url'));
      select.add(new Option('Title', 'title'));
      select.add(new Option('Last change time', 'changed'));
 
-     let common = document.getElementById(Table_view_id);
+     let common = document.getElementById(Div_table_view);
      common.appendChild(label);
      common.appendChild(select);
 }
 
-function page_setup_with_bookmarks(bookmarks)
+function popup_setup_accept(bookmarks)
 {
-     document.getElementById(Table_view_id).addEventListener('change', function()
+     document.getElementById(Div_table_view).addEventListener('change', function()
      {
           if (!bookmarks)
           {
@@ -82,19 +80,18 @@ function page_setup_with_bookmarks(bookmarks)
                default:
                     console.log('not implemented');
           }
-          storage.set(
-          {
-               bookmarks: bookmarks
-          });
-          window.location.reload();
+
+          document.getElementById(Table_id).remove();
+          generate_table(bookmarks);
           
      }, false);
 }
 
 function generate_table(bookmarks)
 {
-     let container = document.getElementById(Table_id);
+     let container = document.getElementById(Div_table);
      let table = document.createElement('table');
+     table.setAttribute('id', Table_id);
      let caption = document.createElement('caption');
      caption.innerHTML = 'Bookmark storage';
 
@@ -234,7 +231,7 @@ function generate_table(bookmarks)
      }
 }
 
-function page_setup_without_bookmarks()
+function popup_setup_error()
 {
      let header = document.createElement('h1');
      header.innerHTML = 'Storage is empty';
@@ -246,12 +243,12 @@ storage.get()
      {
           if (!data.bookmarks || data.bookmarks.length === 0)
           {
-               page_setup_without_bookmarks();
+               popup_setup_error();
                return;
           }
           generate_select(data.bookmarks);
           generate_download_link(data.bookmarks);
           generate_table(data.bookmarks);
-          page_setup_with_bookmarks(data.bookmarks);
+          popup_setup_accept(data.bookmarks);
      });
 

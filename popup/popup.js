@@ -4,7 +4,7 @@ const tabs = browser.tabs;
 const path_to_storage_page = '../storage/storage.html';
 
 // @todo: enter -> add or edit !
-// @todo: window that user edit or saved ! 
+// @todo: new popup window that user edit or saved to more information 
 // @todo: set changeble icon( redraw after adding )
 
 function reload_values( switchToEdit = false )
