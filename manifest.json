@@ -21,9 +21,10 @@
      },
 
      "browser_action": {
-      "browser_style": true,
-      "default_title": "Bookmark extension",
-      "default_popup": "popup/popup.html"
+          "browser_style": true,
+          "default_title": "Bookmark extension",
+          "default_popup": "popup/popup.html",
+          "default_icon": "icons/star.png"
     }
 }
    

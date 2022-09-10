@@ -1,10 +1,9 @@
 const storage = browser.storage.local;
 const tabs = browser.tabs;
 const commands = browser.commands;
+const browserAction = browser.browserAction;
 const path_to_storage_page = '../storage/storage.html';
-
-// @todo: new popup window that user edit or saved to more information  ???? 
-// @todo: set changeble icon( redraw after adding )
+const path_to_icons = "../icons/";
 
 function reload_values( switchToEdit = false )
 {
@@ -164,7 +163,7 @@ tabs.query(
                     status.innerHTML = 'Edit bookmark';
                     buttonSubmit.firstChild.data = 'Edit';
                     buttonReset.firstChild.data = 'Remove';
-               }
+             }
           })
      }
 );
