@@ -131,17 +131,17 @@ tabs.query(
      })
      .then((tabs) =>
      {
-
+          
           let status = document.getElementById('status');
           status.innerHTML = 'Add bookmark';
-               
+          
+          document.getElementById('title').defaultValue = tabs[0].title;
           setup_click_action( tabs[0].url );
 
           storage.get().then(data =>
-          {
+               {
                if ( !data.bookmarks )
                {
-                    console.warn( 'storage is empty' );
                     return;
                }
 
@@ -152,7 +152,6 @@ tabs.query(
                let buttonReset = document.getElementById('cancel');
                if (indexBookmark == -1)
                {
-                    document.getElementById('title').defaultValue = tabs[0].title;
                     buttonSubmit.firstChild.data = 'Add';
                     buttonReset.firstChild.data = 'Cancel'
                }
