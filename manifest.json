@@ -1,7 +1,7 @@
 {
 
      "manifest_version": 2,
-     "name": "bookmarks extension",
+     "name": "Bookmarks extension",
      "version": "1.0",
    
      "description": "storage store bookmarks",
@@ -10,7 +10,16 @@
        "tabs",
        "storage"
      ],
-   
+
+     "commands": {
+          "enter_action" : {
+               "suggested_key" : {
+                    "default" : "Ctrl+Y"
+               },
+               "description": "Send a 'enter_action' event"
+          }
+     },
+
      "browser_action": {
       "browser_style": true,
       "default_title": "Bookmark extension",
