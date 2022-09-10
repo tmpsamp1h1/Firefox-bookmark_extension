@@ -9,7 +9,13 @@ const Table_view_select_id = 'sort';
 const Div_table = 'container';
 const Table_id = 'uniq';
 
-/// @todo: change a new window storage to tab
+
+/*
+@todo: format all files + add comment
+     + changes in css
+*/
+ 
+
 // generate a link to export storage
 function generate_download_link(bookmarks)
 {
@@ -35,10 +41,9 @@ function generate_select(bookmarks)
 
      var select = document.createElement('select');
      select.setAttribute('id', Table_view_select_id);
-     select.add(new Option('Added', 'added'));
+     select.add(new Option('By time added', 'added'));
      select.add(new Option('URL', 'url'));
      select.add(new Option('Title', 'title'));
-     select.add(new Option('Last change time', 'changed'));
 
      let common = document.getElementById(Div_table_view);
      common.appendChild(label);
@@ -67,7 +72,6 @@ function popup_setup_accept(bookmarks)
                     break;
                }
                case 'added':
-               case 'changed':
                {
                     bookmarks.sort(function(lhs, rhs)
                     {
@@ -83,8 +87,7 @@ function popup_setup_accept(bookmarks)
 
           document.getElementById(Table_id).remove();
           generate_table(bookmarks);
-          
-     }, false);
+     });
 }
 
 function generate_table(bookmarks)
@@ -153,6 +156,7 @@ function generate_table(bookmarks)
                               text.setAttribute('contenteditable', true);
                          }
                     }
+                    row.cells.namedItem('description').focus();
                }
                else
                {
