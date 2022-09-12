@@ -41,7 +41,7 @@ function generate_select(bookmarks)
 
      var select = document.createElement('select');
      select.setAttribute('id', Table_view_select_id);
-     select.add(new Option('By time added', 'added'));
+     select.add(new Option('Time of adding', 'added'));
      select.add(new Option('URL', 'url'));
      select.add(new Option('Title', 'title'));
 
@@ -165,7 +165,7 @@ function generate_table(bookmarks)
                     storage.get()
                          .then(data =>
                          {
-                              var indexToEdit = bookmarks.findIndex(
+                              let indexToEdit = bookmarks.findIndex(
                                              item => item['url'] === row.cells.namedItem('url').textContent
                               );
 
@@ -175,7 +175,7 @@ function generate_table(bookmarks)
                                    return;
                               }
                               
-                              var changed = false;
+                              let changed = false;
                               for (let text of row.cells)
                               {
                                    if (text.className == 'editable')
@@ -190,7 +190,20 @@ function generate_table(bookmarks)
                               }
                               if ( changed )
                               {
-                                   bookmarks[indexToEdit]['date']['changed'] = new Date().toLocaleString();
+                                   let editTime = new Date().toLocaleString();
+
+                                   let currentCell = row.cells.namedItem( 'date' );
+                                   if ( bookmarks[indexToEdit]['date']['changed'].length != 0 ) {
+                                        currentCell.lastChild.textContent = ( 'Last edit time: ' + editTime );
+                                   } else { 
+                                        currentCell.appendChild( document.createElement( 'br' ) );
+                                        currentCell.appendChild(
+                                             document.createTextNode( 'Last edit time: ' + editTime )
+                                        );
+                                   }
+
+                                   bookmarks[indexToEdit]['date']['changed'] = editTime;
+
                                    storage.set(
                                         {
                                              bookmarks: bookmarks
