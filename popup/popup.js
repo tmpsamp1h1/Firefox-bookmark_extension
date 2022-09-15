@@ -35,6 +35,12 @@ function rename_button_names(switchToEdit = false)
 /// @param currentUrl - the url to be added to the storage
 function insert_to_storage(currentUrl)
 {
+     let supportProtocols = ["https:", "http:", "file:"];
+     if ( supportProtocols.indexOf((new URL(currentUrl).protocol)) == -1 ) 
+     {
+          return;
+     }
+
      const bookmark_to_insert = {
           url: currentUrl
           , title: document.getElementById('title')
@@ -169,8 +175,10 @@ tabs.query(
           
           document.getElementById('title')
                .defaultValue = tabs[0].title;
+     
+          let currentUrl = tabs[0].url;
 
-          setup_click_action(tabs[0].url);
+          setup_click_action(currentUrl);
           
           storage.get()
                .then(data =>
@@ -183,7 +191,7 @@ tabs.query(
                     }
                     
                     const indexBookmark = data.bookmarks.findIndex(
-                         item => item['url'] === tabs[0].url);
+                         item => item['url'] === currentUrl);
                     
                     // configure buttons
                     
