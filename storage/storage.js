@@ -243,9 +243,9 @@ function generate_table(bookmarks)
                          const indexToDelete = bookmarks.findIndex(
                               item => item['url'] === element['url']
                          );
-                         
                          if (indexToDelete != -1)
                          {
+                              row.remove();
                               bookmarks.splice(indexToDelete, 1);
                               storage.set(
                               {
