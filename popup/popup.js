@@ -6,13 +6,12 @@ const browserAction = browser.browserAction;
 const path_to_storage_page = '../storage/storage.html';
 const path_to_icons = "../icons/";
 
-/// @brief helper funtion that which switches button names
+/// @brief helper function which switches button names
 /// @param switchToEdit - if it's true, then the bookmark is in the storage
      /// should change behavior of buttons
 function rename_button_names(switchToEdit = false)
 {
      let status = document.getElementById('status');
-     let buttons = document.getElementById('popup_buttons');
      let cancel = document.getElementById('cancel');
      let add = document.getElementById('add');
      
@@ -31,7 +30,7 @@ function rename_button_names(switchToEdit = false)
           .focus();
 }
 
-/// @brief helper function that adds a bookmark to the storage
+/// @brief helper function adds a bookmark to the storage
 /// @param currentUrl - the url to be added to the storage
 function insert_to_storage(currentUrl)
 {
@@ -98,7 +97,7 @@ function insert_to_storage(currentUrl)
           });
 }
 
-/// @brief helper function that connects button clicks with events
+/// @brief helper function connects button clicks with events
 /// @param currentUrl - the url to be added to the storage
 function setup_click_action(currentUrl)
 {
