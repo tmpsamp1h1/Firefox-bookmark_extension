@@ -1,216 +1,285 @@
 const storage = browser.storage.local;
-const tabs = browser.tabs;
-const commands = browser.commands;
-const browserAction = browser.browserAction;
 
-const path_to_storage_page = '../storage/storage.html';
-const path_to_icons = "../icons/";
+const Download_file_name = 'backup.json';
+const Div_download = 'downloader';
 
-/// @brief helper function which switches button names
-/// @param switchToEdit - if it's true, then the bookmark is in the storage
-     /// should change behavior of buttons
-function rename_button_names(switchToEdit = false)
+const Div_table_view = 'table_view';
+const Table_view_select_id = 'sort';
+
+const Div_table = 'container';
+const Table_id = 'table_id';
+
+/// @brief creates a link to export data from the storage in JSON format
+function generate_download_link(bookmarks)
 {
-     let status = document.getElementById('status');
-     let buttons = document.getElementById('popup_buttons');
-     let cancel = document.getElementById('cancel');
-     let add = document.getElementById('add');
-     
-     if (switchToEdit)
-     {
-          status.innerHTML = 'Edit bookmark';
-          cancel.innerHTML = 'Remove';
-          add.innerHTML = 'Edit';
-          return;
-     }
-     
-     status.innerHTML = 'Add bookmark';
-     cancel.innerHTML = 'Cancel';
-     add.innerHTML = 'Add';
-     document.getElementById('description')
-          .focus();
+     let blob = new Blob([JSON.stringify(bookmarks)]
+     , {
+          type: 'application/json'
+     });
+     let url = URL.createObjectURL(blob);
+     let a = document.createElement('a');
+     a.href = url;
+     a.download = Download_file_name;
+     a.textContent = 'Download ' + Download_file_name;
+     document.getElementById(Div_download)
+          .appendChild(a);
 }
 
-/// @brief helper function adds a bookmark to the storage
-/// @param currentUrl - the url to be added to the storage
-function insert_to_storage(currentUrl)
+/// @brief creates a selection for displaying tables
+function generate_select()
 {
-     let supportProtocols = ["https:", "http:", "file:"];
-     if ( supportProtocols.indexOf((new URL(currentUrl).protocol)) == -1 ) 
-     {
-          return;
-     }
-
-     const bookmark_to_insert = {
-          url: currentUrl
-          , title: document.getElementById('title')
-               .value
-          , description: document.getElementById('description')
-               .value
-          , date:
-          {
-               added: new Date()
-                    .toLocaleString()
-               , changed: ''
-          }
-     };
+     let label = document.createElement('label');
+     label.setAttribute('for', Div_table_view);
+     label.innerHTML = 'Table sorted by: ';
      
-     storage.get()
-          .then(data =>
+     let select = document.createElement('select');
+     select.setAttribute('id', Table_view_select_id);
+     select.add(new Option('Time of adding', 'added'));
+     select.add(new Option('URL', 'url'));
+     select.add(new Option('Title', 'title'));
+     
+     let common = document.getElementById(Div_table_view);
+     common.appendChild(label);
+     common.appendChild(select);
+}
+
+/// @brief connects a selection click to a table display
+/// @param bookmarks - data that is stored in the storage
+function setup_sort_action(bookmarks)
+{
+     document.getElementById(Div_table_view)
+          .addEventListener('change', function ()
           {
-               if (!data.bookmarks)
+               if (!bookmarks)
                {
-                    storage.set(
-                    {
-                         bookmarks: [bookmark_to_insert]
-                    });
-                    let switchValuesToEdit = true;
-                    rename_button_names(switchValuesToEdit);
+                    console.warn('storage is empty');
                     return;
                }
-               
-               const indexBookmark = data.bookmarks.findIndex(
-                    item => item['url'] === currentUrl
-               );
-               
-               // user edited a bookmark which is already in the storage
-               if (indexBookmark != -1)
+               let sort_type = document.getElementById(Table_view_select_id)
+                    .value;
+               switch (sort_type)
                {
-                    data.bookmarks[indexBookmark]['title'] = document.getElementById('title')
-                         .value;
-                    data.bookmarks[indexBookmark]['description'] = document.getElementById('description')
-                         .value;
-                    data.bookmarks[indexBookmark]['date']['changed'] = new Date()
-                         .toLocaleString();
-               }
-               else // user has just added a new bookmark
+               case 'url':
+               case 'title':
                {
-                    data.bookmarks.push(bookmark_to_insert);
-                    let switchValuesToEdit = true;
-                    rename_button_names(switchValuesToEdit);
-               }
-
-               storage.set(
-               {
-                    bookmarks: data.bookmarks
-               });
-               
-          });
-}
-
-/// @brief helper function connects button clicks with events
-/// @param currentUrl - the url to be added to the storage
-function setup_click_action(currentUrl)
-{
-     document.getElementById('description')
-          .focus();
-     
-     document.getElementById('storage')
-          .addEventListener('click', () =>
-          {
-               tabs.create(
+                    bookmarks.sort(function (lhs, rhs)
                     {
-                         url: path_to_storage_page
-                    })
-                    .then(() =>
-                    {
-                         window.close()
+                         return lhs[sort_type].localeCompare(rhs[sort_type]);
                     });
-          });
-     
-     document.getElementById('cancel')
-          .addEventListener('click', () =>
-          {
-               if (document.getElementById('cancel')
-                    .innerHTML == 'Cancel')
-               {
-                    window.close();
+                    break;
                }
-               else // user wants to delete to a bookmark
+               case 'added':
                {
-                    storage.get()
-                         .then(data =>
-                         {
-                              rename_button_names();
-                              const indexBookmark = data.bookmarks.findIndex(
-                                   item => item['url'] === currentUrl
-                              );
-                              
-                              data.bookmarks.splice(indexBookmark, 1);
-                              storage.set(
-                              {
-                                   bookmarks: data.bookmarks
-                              });
-                              document.getElementById('description')
-                                   .value = "";
-                         });
+                    bookmarks.sort(function (lhs, rhs)
+                    {
+                         
+                         return lhs['date'][sort_type].localeCompare(rhs['date'][sort_type]);
+                    });
+                    
+                    break;
                }
+               default:
+                    console.log('not implemented');
+               }
+               
+               document.getElementById(Table_id)
+                    .remove();
+               generate_table(bookmarks);
           });
-     
-     document.getElementById('add')
-          .addEventListener('click', () =>
-          {
-               insert_to_storage(currentUrl);
-          });
-     
-     commands.onCommand.addListener(command =>
-     {
-          if (command == 'enter_action')
-          {
-               insert_to_storage(currentUrl);
-          }
-     });
 }
 
-tabs.query(
-     {
-          currentWindow: true
-          , active: true
-     })
-     .then( /*to get URL and a title of an active tab*/ (tabs) =>
-     {
-          
-          let status = document.getElementById('status');
-          status.innerHTML = 'Add bookmark';
-          
-          document.getElementById('title')
-               .defaultValue = tabs[0].title;
+/// @brief creates HTML-table by data
+/// @param bookmarks - data that is stored in the storage
+function generate_table(bookmarks)
+{
+     let container = document.getElementById(Div_table);
+     let table = document.createElement('table');
+     table.setAttribute('id', Table_id);
+     // creating a table description 
+     let caption = document.createElement('caption');
+     caption.innerHTML = 'Bookmark storage';
      
-          let currentUrl = tabs[0].url;
-
-          setup_click_action(currentUrl);
-          
-          storage.get()
-               .then(data =>
+     container.appendChild(table);
+     table.appendChild(caption);
+     
+     // creating headers of each columns
+     let thead = table.createTHead();
+     let row = thead.insertRow();
+     for (let str of Object.keys(bookmarks[0]))
+     {
+          let th = document.createElement('th');
+          let text = document.createTextNode(str);
+          th.appendChild(text);
+          row.appendChild(th);
+     }
+     
+     // creating each row based on the data in the storage
+     for (let [index, element] of bookmarks.entries())
+     {
+          let row = table.insertRow();
+          row.setAttribute('id', index); // for removal a row
+          for (key in element)
+          {
+               let cell = row.insertCell();
+               cell.setAttribute('id', key);
+               let text = document.createTextNode(element[key]);
+               switch (key)
                {
-                    if (!data.bookmarks)
+               case 'url':
+                    // it should be a link
+                    let a = document.createElement('a');
+                    a.appendChild(text);
+                    a.href = element[key];
+                    cell.appendChild(a);
+                    break;
+               case 'date':
+                    cell.appendChild(document.createTextNode('Added time: ' + element[key]['added']));
+                    if (element[key]['changed'].length !== 0)
                     {
-                         // storage is empty and
-                         // buttons already configured
+                         cell.appendChild(document.createElement('br'));
+                         cell.appendChild(document.createTextNode('Last edit time: ' + element[key]['changed']));
+                    }
+                    break;
+               default:
+                    // title, description
+                    cell.setAttribute('class', 'editable');
+                    cell.appendChild(text);
+               }
+          }
+
+          // event for edit button
+          let buttonEdit = document.createElement('button');
+          buttonEdit.type = 'button';
+          buttonEdit.innerHTML = 'Edit';
+          buttonEdit.onclick = function ()
+          {
+               if (buttonEdit.innerHTML === 'Edit')
+               {
+                    buttonEdit.innerHTML = 'Save';
+                    for (let text of row.cells)
+                    {
+                         if (text.className == 'editable')
+                         {
+                              text.setAttribute('contenteditable', true);
+                         }
+                    }
+                    // set default focus to description
+                    row.cells.namedItem('description')
+                         .focus();
+               }
+               else
+               {
+                    buttonEdit.innerHTML = 'Edit';
+                    // the row should not change now
+                    row.setAttribute('contenteditable', false);
+
+                    let indexToEdit = bookmarks.findIndex(
+                         item => item['url'] === row.cells.namedItem('url')
+                         .textContent
+                    );
+                    
+                    if (indexToEdit == -1)
+                    {
+                         console.error('Bookmark not found');
                          return;
                     }
                     
-                    const indexBookmark = data.bookmarks.findIndex(
-                         item => item['url'] === currentUrl);
-                    
-                    // configure buttons
-                    
-                    let buttonSubmit = document.getElementById('add');
-                    let buttonReset = document.getElementById('cancel');
-                    if (indexBookmark == -1)
+                    let changed = false;
+                    for (let text of row.cells)
                     {
-                         buttonSubmit.firstChild.data = 'Add';
-                         buttonReset.firstChild.data = 'Cancel'
+                         if (text.className == 'editable')
+                         {
+                              let content = text.textContent;
+                              if (bookmarks[indexToEdit][text.getAttribute('id')] != content)
+                              {
+                                   changed = true;
+                                   bookmarks[indexToEdit][text.getAttribute('id')] = text.textContent;
+                              }
+                         }
                     }
-                    else
+                    if (changed)
                     {
-                         document.getElementById('title')
-                              .value = data.bookmarks[indexBookmark].title;
-                         document.getElementById('description')
-                              .value = data.bookmarks[indexBookmark].description;
-                         status.innerHTML = 'Edit bookmark';
-                         buttonSubmit.firstChild.data = 'Edit';
-                         buttonReset.firstChild.data = 'Remove';
+                         let editTime = new Date()
+                              .toLocaleString();
+                         
+                         let currentCell = row.cells.namedItem('date');
+                         if (bookmarks[indexToEdit]['date']['changed'].length != 0)
+                         {
+                              currentCell.lastChild.textContent = ('Last edit time: ' + editTime);
+                         }
+                         else
+                         {
+                              currentCell.appendChild(document.createElement('br'));
+                              currentCell.appendChild(
+                                   document.createTextNode('Last edit time: ' + editTime)
+                              );
+                         }
+                         
+                         bookmarks[indexToEdit]['date']['changed'] = editTime;
+                         
+                         storage.set(
+                         {
+                              bookmarks: bookmarks
+                         });
                     }
-               })
+               }
+          };
+          
+          // event for delete button
+          let button = document.createElement('button');
+          button.type = 'button';
+          button.innerHTML = 'Delete';
+          button.onclick = function ()
+          {
+               const indexToDelete = bookmarks.findIndex(
+                    item => item['url'] === element['url']
+               );
+               if (indexToDelete != -1)
+               {
+                    row.remove();
+                    bookmarks.splice(indexToDelete, 1);
+                    storage.set(
+                    {
+                         bookmarks: bookmarks
+                    });
+                    if (bookmarks.length === 0)
+                    {
+                         window.location.reload();
+                    }
+               }
+          };
+
+          let cell = row.insertCell();
+          cell.appendChild(buttonEdit);
+          cell.appendChild(button);
+     }
+}
+
+/// @brief generates the page if the storage is empty
+function page_setup_ERROR()
+{
+     let header = document.createElement('h1');
+     header.innerHTML = 'Storage is empty';
+     document.body.append(header);
+}
+
+/// @brief generates the page if the storage is not empty
+/// @param bookmarks 
+function page_setup_OK( bookmarks )
+{
+     generate_select( bookmarks );
+     generate_download_link( bookmarks );
+     generate_table( bookmarks );
+     setup_sort_action( bookmarks );
+}
+
+storage.get()
+     .then(data =>
+     {
+          if (!data.bookmarks || data.bookmarks.length === 0)
+          {
+               page_setup_ERROR();
+               return;
+          }
+          page_setup_OK( data.bookmarks );
      });
