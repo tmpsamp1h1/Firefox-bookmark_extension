@@ -1,4 +1,4 @@
-const storage = browser.storage.local;
+const storage = browser.storage.sync;
 const tabs = browser.tabs;
 const commands = browser.commands;
 const browserAction = browser.browserAction;
